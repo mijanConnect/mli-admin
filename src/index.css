@@ -1,0 +1,381 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Poppins", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+/* Ant Design modal footer top margin remove */
+.ant-modal-footer {
+  margin-top: 0 !important;
+}
+
+/* Ensure selected route icon is white */
+.ant-menu-item-selected .ant-menu-item-icon {
+  color: white !important;
+}
+
+/* Ant Design menu item text color - default */
+.ant-menu-item {
+  color: black !important;
+}
+
+/* Hover effect - change text color to white and background gradient */
+.ant-menu-item:hover {
+  background: #3fae6a !important;
+  color: white !important; /* Text color to white */
+}
+
+.ant-menu-item-selected {
+  background: #3fae6a !important;
+  color: white !important;
+  font-weight: bold;
+  border-radius: 8px 0 0 8px !important;
+}
+
+.ant-menu-item-selected:hover {
+  border-radius: 8px 0 0 8px !important;
+}
+
+/* Icon color change on hover */
+.ant-menu-item:hover .ant-menu-item-icon {
+  color: white !important;
+}
+
+/* Ant Design Badge */
+.ant-badge .ant-badge-count {
+  background: #3fae6a !important;
+  color: white !important;
+}
+
+/* Jodit Editor Height */
+.jodit-workplace {
+  height: 500px !important;
+}
+
+/* Add this to your CSS */
+.custom-row {
+  margin-bottom: 10px !important;
+}
+
+/* Optional: To add padding to the rows */
+.custom-row .ant-table-cell {
+  padding: 12px 20px;
+}
+
+/* Custom table styling */
+.custom-table {
+  border: 1px solid #3fae6a;
+  border-radius: 10px;
+}
+.custom-table .ant-table-thead > tr > th {
+  background-color: #3fae6a !important;
+  color: #fff !important;
+  border-bottom: 2px solid #ddd;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px;
+}
+
+/* Hide number input arrows in WebKit browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Selected menu item image color change to white */
+.ant-menu-item-selected .icon-image {
+  filter: invert(1) grayscale(0) brightness(100%) !important;
+}
+
+/* Add margin bottom to each row in the table body */
+.ant-table-tbody > tr {
+  margin-bottom: 5px;
+}
+/* Add space between rows */
+.ant-table {
+  border-spacing: 0 5px; /* Adds 5px space between rows */
+}
+
+.custom-tooltip .ant-tooltip-inner {
+  background: #3fae6a !important;
+  color: white;
+}
+
+/* Ensure SVG icons in selected menu items are white */
+.ant-menu-item-selected .menu-icon {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Hover effect for SVG icons */
+.ant-menu-item:hover .menu-icon {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Target SVG paths directly if needed */
+.ant-menu-item-selected .menu-icon path,
+.ant-menu-item-selected .menu-icon svg path {
+  fill: white !important;
+}
+
+.ant-menu-item:hover .menu-icon path,
+.ant-menu-item:hover .menu-icon svg path {
+  fill: white !important;
+}
+
+/* Add this class to handle special SVG components */
+.svg-active svg {
+  fill: white !important;
+}
+
+.svg-active svg path {
+  fill: white !important;
+}
+/* Prevent hover color change */
+.ant-table-row:hover {
+  background-color: transparent !important;
+}
+
+.red-row {
+  background-color: #f8d7da;
+}
+
+/* Add these styles to your global CSS file or in the relevant component style file */
+
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 95vh;
+}
+
+.logo-container {
+  flex-shrink: 0;
+}
+
+.menu-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 0 0 5px;
+  /* border-radius: 5%; */
+  border-top: 1px solid #3fae6a;
+}
+
+.sidebar-menu {
+  padding: 0;
+  background: #fff !important;
+}
+
+.sidebar-menu .ant-menu-item {
+  padding-left: 20px;
+  /* transition: background-color 0.0s ease, color 0.0s ease; */
+}
+
+.sidebar-menu .ant-menu-item:hover {
+  background-color: #3fae6a !important; /* Hover effect */
+}
+
+.sidebar-menu .ant-menu-item-selected {
+  /* background-color: #007bff !important; Active item background */
+  color: white; /* Active item text color */
+}
+
+.sidebar-menu .ant-menu-submenu-title {
+  padding-left: 20px;
+}
+
+.sidebar-menu .ant-menu-submenu-selected {
+  /* background-color: #007bff !important; Active submenu */
+  color: white;
+}
+
+/* Custom Scrollbar */
+.menu-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.menu-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.menu-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.menu-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Add this to your global CSS file */
+
+/* Ensure the root container is responsive */
+#root,
+html,
+body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Media queries for responsive components */
+@media (max-width: 640px) {
+  .responsive-table .ant-table {
+    font-size: 12px;
+  }
+
+  .responsive-table .ant-table-thead > tr > th,
+  .responsive-table .ant-table-tbody > tr > td {
+    padding: 8px 4px;
+  }
+}
+
+/* Improve chart responsiveness */
+canvas {
+  max-width: 100%;
+}
+
+/* Fix gradient backgrounds for better mobile compatibility */
+.bg-gradient-to-r {
+  background-size: 200% 100%;
+}
+
+/* Improved padding for containers on mobile */
+@media (max-width: 768px) {
+  .p-4 {
+    padding: 0.75rem;
+  }
+  .gap-6 {
+    gap: 0.75rem;
+  }
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+}
+
+/* Fix select dropdown appearance on mobile */
+select {
+  appearance: none;
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5em;
+}
+
+/* Improve container sizing */
+.container,
+.w-full {
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Same design as your input fields */
+.custom-select .ant-select-selector {
+  border-radius: 200px !important;
+  padding: 12px !important;
+}
+
+/* Optional: style dropdown items */
+.custom-dropdown .ant-select-item {
+  border-radius: 8px;
+}
+
+.ant-form-item-label > label {
+  font-size: 20px;
+  color: #18191b;
+  font-weight: bold;
+}
+
+/* +++++++++++++++++ MLI custom css +++++++++++++++++ */
+/* INPUT (handles normal & with prefix/suffix) */
+.mli-tall-input.ant-input,
+.mli-tall-input.ant-input-affix-wrapper {
+  height: 40px;
+  border: 1px solid #d8d8d8; /* added */
+}
+.mli-tall-input.ant-input {
+  line-height: 40px;
+} /* center text for plain inputs */
+.mli-tall-input.ant-input-affix-wrapper .ant-input {
+  height: 100%;
+}
+
+.mli-tall-select {
+  margin-bottom: 8px !important; /* space below */
+}
+
+/* SELECT (single mode) */
+.mli-tall-select .ant-select-selector {
+  height: 40px !important;
+  /* These help keep the text vertically centered and leave space for the arrow */
+  display: flex !important;
+  align-items: center;
+  padding: 0 36px 0 12px !important; /* room on right for chevron */
+  border: 1px solid #d8d8d8 !important; /* added */
+}
+
+/* Keep placeholders/items vertically nice */
+.mli-tall-select .ant-select-selection-item,
+.mli-tall-select .ant-select-selection-placeholder {
+  line-height: 40px !important;
+}
+
+/* Search input height when typing */
+.mli-tall-select .ant-select-selection-search-input {
+  height: 40px !important;
+}
+
+/* --- Center the dropdown chevron (down arrow) vertically --- */
+.mli-tall-select .ant-select-arrow {
+  top: 75% !important;
+  bottom: auto !important;
+  transform: translateY(-50%) !important;
+  right: 11px; /* aligns with AntD default padding */
+  height: 40px; /* match control height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* If clear (×) is enabled, center that too */
+.mli-tall-select .ant-select-clear {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* DATE PICKER */
+.mli-tall-picker.ant-picker {
+  height: 40px;
+  border: 1px solid #d8d8d8; /* added */
+}
+.mli-tall-picker .ant-picker-input > input {
+  height: 40px;
+  line-height: 40px;
+}
+
+.ant-form-item {
+  margin-bottom: 0px !important;
+}
+
+/* Remove focus border from phone input */
+.phone-input-no-focus input {
+  outline: none !important;
+  box-shadow: none !important;
+  margin-right: 12px;
+}
+
+.phone-input-no-focus input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #3fae6a !important;
+}

@@ -1,0 +1,219 @@
+import { Button, DatePicker, message } from "antd";
+import "antd/dist/reset.css";
+import dayjs from "dayjs";
+import { useMemo, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
+import {
+  useGetRevenuePerUserQuery,
+  useLazyExportRevenuePerUserQuery,
+} from "../../../../redux/apiSlices/accountingSlice";
+import CustomTable from "../../../common/CustomTable";
+import { useUser } from "../../../../provider/User";
+
+// Table columns
+const columns = [
+  {
+    title: "Customer ID",
+    dataIndex: "customerId",
+    key: "customerId",
+    align: "center",
+  },
+  {
+    title: "Customer Name",
+    dataIndex: "customers",
+    key: "customers",
+    align: "center",
+  },
+  {
+    title: "Transactions",
+    dataIndex: "transactions",
+    key: "transactions",
+    align: "center",
+  },
+  {
+    title: "Total Revenue",
+    dataIndex: "totalRevenue",
+    key: "totalRevenue",
+    align: "center",
+    render: (value) => `${value.toFixed(2)}`,
+  },
+  // {
+  //   title: "Date",
+  //   dataIndex: "date",
+  //   key: "date",
+  //   align: "center",
+  // },
+];
+
+export default function RevenuePerUser() {
+  const { user } = useUser();
+  const isViewAdmin = user?.role === "VIEW_ADMIN";
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Read values from URL params
+  const fromDate = searchParams.get("fromDate") || "";
+  const toDate = searchParams.get("toDate") || "";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const pageSize = parseInt(searchParams.get("limit") || "10", 10);
+
+  // Build query params for API
+  const queryParams = useMemo(() => {
+    const params = [];
+    if (fromDate) {
+      params.push({ name: "startDate", value: fromDate });
+    }
+    if (toDate) {
+      params.push({ name: "endDate", value: toDate });
+    }
+    params.push({ name: "page", value: currentPage });
+    params.push({ name: "limit", value: pageSize });
+    return params;
+  }, [fromDate, toDate, currentPage, pageSize]);
+
+  // Fetch data from API
+  const {
+    data: apiResponse,
+    isLoading,
+    isFetching,
+  } = useGetRevenuePerUserQuery(queryParams);
+
+  // Lazy query for export
+  const [triggerExport, { isLoading: isExportLoading }] =
+    useLazyExportRevenuePerUserQuery();
+
+  const handleExportRevenuePerUser = async () => {
+    try {
+      const result = await triggerExport([
+        { name: "startDate", value: fromDate },
+        { name: "endDate", value: toDate },
+      ]);
+
+      if (result.data) {
+        // Create a blob URL and trigger download
+        const blob = result.data;
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Generate filename with current date
+        const dateStr = new Date().toISOString().split("T")[0];
+        link.download = `revenue-per-user-export-${dateStr}.xlsx`;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        message.success("Report exported successfully!");
+      }
+    } catch (error) {
+      console.error("Export failed:", error);
+      message.error("Failed to export report");
+    }
+  };
+
+  // Helper function to update URL params
+  const updateSearchParam = useCallback(
+    (key, value) => {
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        if (value && value !== "") {
+          newParams.set(key, value);
+        } else {
+          newParams.delete(key);
+        }
+        return newParams;
+      });
+    },
+    [setSearchParams],
+  );
+
+  const handlePageSizeChange = (newPageSize) => {
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("limit", newPageSize.toString());
+      newParams.delete("page");
+      return newParams;
+    });
+  };
+
+  // Transform API data for table
+  const filteredData = useMemo(() => {
+    // API response has nested data structure: apiResponse.data.data
+    if (!apiResponse?.data?.data) return [];
+
+    const dataArray = Array.isArray(apiResponse.data.data)
+      ? apiResponse.data.data
+      : [];
+
+    return dataArray.map((item, index) => ({
+      key: index,
+      sl: index + 1 + (currentPage - 1) * pageSize,
+      customerId: item.customUserId || item.customerId || item._id || "-",
+      customers: item.customerName || "-",
+      transactions: item.totalTransactions || 0,
+      totalRevenue: item.totalRevenue || 0,
+      date: item.date ? dayjs(item.date).format("YYYY-MM-DD") : "-",
+    }));
+  }, [apiResponse, currentPage, pageSize]);
+
+  return (
+    <div style={{ width: "100%" }}>
+      <div className="flex justify-between items-center mb-1">
+        <h1 className="text-[30px] font-bold mb-2">Revenue Per User</h1>
+        <div className="flex justify-between">
+          <div>
+            <DatePicker
+              value={fromDate ? dayjs(fromDate) : null}
+              onChange={(date) =>
+                updateSearchParam(
+                  "fromDate",
+                  date ? dayjs(date).format("YYYY-MM-DD") : "",
+                )
+              }
+              style={{ marginLeft: "auto", marginRight: "20px" }}
+              placeholder="From Date"
+              format="YYYY-MM-DD"
+            />
+            <DatePicker
+              value={toDate ? dayjs(toDate) : null}
+              onChange={(date) =>
+                updateSearchParam(
+                  "toDate",
+                  date ? dayjs(date).format("YYYY-MM-DD") : "",
+                )
+              }
+              style={{ marginRight: "20px" }}
+              placeholder="To Date"
+              format="YYYY-MM-DD"
+            />
+          </div>
+          <Button
+            className="bg-primary text-white font-semibold px-[20px] hover:!text-black"
+            onClick={handleExportRevenuePerUser}
+            loading={isExportLoading}
+            disabled={isExportLoading || isViewAdmin}
+          >
+            Export Report
+          </Button>
+        </div>
+      </div>
+      <CustomTable
+        data={filteredData}
+        columns={columns}
+        isLoading={isLoading}
+        isFetching={isFetching}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: apiResponse?.pagination?.total || 0,
+        }}
+        onPaginationChange={(page) =>
+          updateSearchParam("page", page > 1 ? page.toString() : "")
+        }
+        onPageSizeChange={handlePageSizeChange}
+        rowKey="key"
+      />
+    </div>
+  );
+}
