@@ -128,6 +128,12 @@ export function setAuthTokens(
   }
 
   setAuthDevice(deviceValue);
+
+  try {
+    localStorage.setItem("hasSession", "true");
+  } catch (error) {
+    reportStorageIssue("write hasSession", error);
+  }
 }
 
 export function getResetToken() {
@@ -153,6 +159,11 @@ export function clearAuthToken() {
   removeItem(AUTH_DEVICE_KEY);
   purgeLegacyAccessTokens();
   purgeLegacyRefreshTokenFromLocalStorage();
+  try {
+    localStorage.removeItem("hasSession");
+  } catch (error) {
+    reportStorageIssue("remove hasSession", error);
+  }
   emitAuthChange("token-cleared");
 }
 

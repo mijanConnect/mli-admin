@@ -27,14 +27,19 @@ const extractTokens = (payload) => {
   };
 };
 
-const buildRefreshHeaders = (refreshToken) => ({
-  "Content-Type": "application/json",
-  Authorization: refreshToken,
-});
+const buildRefreshHeaders = (refreshToken) => {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  if (refreshToken) {
+    headers["Authorization"] = refreshToken;
+  }
+  return headers;
+};
 
 const buildRefreshBody = (refreshToken) =>
   JSON.stringify({
-    refreshToken,
+    refreshToken: refreshToken || undefined,
     device: getAuthDevice(),
   });
 
@@ -44,11 +49,6 @@ async function requestTokenRefresh() {
   }
 
   const refreshToken = getRefreshToken();
-
-  if (!refreshToken) {
-    return null;
-  }
-
   const device = getAuthDevice();
 
   try {
@@ -56,6 +56,7 @@ async function requestTokenRefresh() {
       method: "POST",
       headers: buildRefreshHeaders(refreshToken),
       body: buildRefreshBody(refreshToken),
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -82,7 +83,8 @@ async function requestTokenRefresh() {
 
     setAuthTokens(nextAccessToken, nextRefreshToken || refreshToken, device);
     return nextAccessToken;
-  } catch {
+  } catch (error) {
+    // 
     return null;
   }
 }
@@ -102,26 +104,32 @@ export async function restoreAuthSession() {
     return true;
   }
 
-  if (!getRefreshToken()) {
-    return false;
-  }
-
+  // Always attempt to refresh the token using cookies,
+  // mimicking the reference HTML script behavior.
   const nextAccessToken = await refreshAccessToken();
   return Boolean(nextAccessToken);
 }
 
 export async function logoutSession() {
   const refreshToken = getRefreshToken();
+  const accessToken = getAuthToken();
 
-  if (apiBaseUrl && refreshToken) {
+  if (apiBaseUrl) {
     try {
-      await fetch(`${apiBaseUrl}${authLogoutPath}`, {
+      const headers = buildRefreshHeaders(refreshToken);
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
+      const response = await fetch(`${apiBaseUrl}${authLogoutPath}`, {
         method: "POST",
-        headers: buildRefreshHeaders(refreshToken),
+        headers,
         body: buildRefreshBody(refreshToken),
+        credentials: "include",
       });
-    } catch {
-      // Server invalidation is best-effort; always clear client state.
+
+    } catch (e) {
+      // 
     }
   }
 

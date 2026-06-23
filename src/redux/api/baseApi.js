@@ -21,6 +21,7 @@ if (!mediaBaseUrl) {
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: apiBaseUrl,
+  credentials: "include",
   prepareHeaders: (headers) => {
     if (headers.has("Authorization")) {
       return headers;
