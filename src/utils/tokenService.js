@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 const ACCESS_TOKEN_KEY = "token";
 const REFRESH_TOKEN_KEY = "refreshToken";
 const RESET_TOKEN_KEY = "resetToken";
@@ -26,20 +28,22 @@ const purgeLegacyAccessTokens = () => {
   }
 };
 
-const purgeLegacyRefreshTokenFromLocalStorage = () => {
+const purgeLegacyLocalData = () => {
   try {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(AUTH_DEVICE_KEY);
+    localStorage.removeItem(RESET_TOKEN_KEY);
   } catch (error) {
-    reportStorageIssue("purge legacy refresh token", error);
+    reportStorageIssue("purge legacy local data", error);
   }
 };
 
 purgeLegacyAccessTokens();
-purgeLegacyRefreshTokenFromLocalStorage();
+purgeLegacyLocalData();
 
 const readItem = (key) => {
   try {
-    return sessionStorage.getItem(key);
+    return Cookies.get(key) || null;
   } catch (error) {
     reportStorageIssue(`read ${key}`, error);
     return null;
@@ -48,7 +52,7 @@ const readItem = (key) => {
 
 const writeItem = (key, value) => {
   try {
-    sessionStorage.setItem(key, value);
+    Cookies.set(key, value, { expires: 30, secure: window.location.protocol === "https:", sameSite: 'lax' });
   } catch (error) {
     reportStorageIssue(`write ${key}`, error);
   }
@@ -56,7 +60,7 @@ const writeItem = (key, value) => {
 
 const removeItem = (key) => {
   try {
-    sessionStorage.removeItem(key);
+    Cookies.remove(key);
   } catch (error) {
     reportStorageIssue(`remove ${key}`, error);
   }
@@ -158,7 +162,7 @@ export function clearAuthToken() {
   removeItem(REFRESH_TOKEN_KEY);
   removeItem(AUTH_DEVICE_KEY);
   purgeLegacyAccessTokens();
-  purgeLegacyRefreshTokenFromLocalStorage();
+  purgeLegacyLocalData();
   try {
     localStorage.removeItem("hasSession");
   } catch (error) {
