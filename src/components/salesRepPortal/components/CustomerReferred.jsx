@@ -111,8 +111,8 @@ const CustomerReferred = () => {
                 acknowledgeDate: new Date().toLocaleDateString(),
                 acknowledged: true,
               }
-            : item
-        )
+            : item,
+        ),
       );
 
       Swal.fire({
@@ -169,8 +169,8 @@ const CustomerReferred = () => {
                 tokenGeneratedDate: new Date().toLocaleDateString(),
                 statusProgress: 2,
               }
-            : item
-        )
+            : item,
+        ),
       );
       setIsCashTokenModalVisible(true);
     } catch (error) {
@@ -236,8 +236,8 @@ const CustomerReferred = () => {
                         : item.statusProgress,
                     activateDate: new Date().toLocaleDateString(),
                   }
-                : item
-            )
+                : item,
+            ),
           );
 
           Swal.fire({
@@ -259,7 +259,6 @@ const CustomerReferred = () => {
   };
 
   const handleCopyReferralID = () => {
-
     if (!referralID) {
       Swal.fire({
         icon: "warning",
@@ -405,7 +404,7 @@ const CustomerReferred = () => {
       >
         <div className="flex flex-col items-center my-16 border border-secondary rounded-md p-8">
           <p className="text-[16px] font-normal">
-            Cash token generated for John Doe
+            Cash token generated for {selectedRecord?.customerName}:
           </p>
           <p className="text-[16px] font-bold mt-2">{generatedToken}</p>
         </div>
