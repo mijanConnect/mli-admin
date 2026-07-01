@@ -17,17 +17,16 @@ const ViewModal = ({ visible, onCancel, selectedRecord, columns2, data }) => {
     // },
     {
       title: "Date",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "createdAt",
+      key: "createdAt",
       align: "center",
       render: (value) => (value ? moment(value).format("lll") : "N/A"),
     },
     {
       title: "Merchant",
-      dataIndex: ["merchant", "businessName"],
+      dataIndex: "merchantName",
       key: "merchantName",
       align: "center",
-      render: (_, record) => record?.merchant?.businessName || "N/A",
     },
     {
       title: "Total Bill",
@@ -53,12 +52,12 @@ const ViewModal = ({ visible, onCancel, selectedRecord, columns2, data }) => {
       key: "pointRedeemed",
       align: "center",
     },
-    {
-      title: "Final Points",
-      dataIndex: "finalPoints",
-      key: "finalPoints",
-      align: "center",
-    },
+    // {
+    //   title: "Final Points",
+    //   dataIndex: "finalPoints",
+    //   key: "finalPoints",
+    //   align: "center",
+    // },
     {
       title: "Status",
       dataIndex: "status",

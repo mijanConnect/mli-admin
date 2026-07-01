@@ -95,6 +95,9 @@ const CustomerManagement2 = () => {
       subscriptionData: item.subscriptionData,
       pointsBalance: (item.totalPoints || 0).toFixed(2),
       raw: item,
+      date: item?.sells?.[0]?.createdAt
+        ? new Date(item.sells[0].createdAt).toLocaleDateString()
+        : "-",
     }));
   }, [response, page, limit]);
 
