@@ -29,15 +29,19 @@ const Login = () => {
 
       message.success("Login successful!");
 
+      let fetchedUser = null;
       // Refetch profile after login
       try {
-        await refetch();
+        const result = await refetch();
+        fetchedUser = result?.data;
       } catch (error) {
         console.warn("Profile fetch delayed:", error);
       }
 
+      const role = fetchedUser?.role || user?.role;
+
       // Navigate based on user role
-      if (user?.role === "ADMIN_SELL" || user?.role === "ADMIN_REP") {
+      if (role === "ADMIN_SELL" || role === "ADMIN_REP") {
         navigate("/sales-rep-portal", { replace: true });
       } else {
         navigate("/", { replace: true });
